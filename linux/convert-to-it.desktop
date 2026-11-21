@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Convert to it!
+Comment=Universal file converter, runs offline
+Exec=convert-to-it %F
+Icon=convert-to-it
+Terminal=false
+Categories=Utility;Graphics;AudioVideo;Office;
+StartupWMClass=Convert to it!

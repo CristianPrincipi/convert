@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Converti con Convert
+Comment=Apre Convert con i file selezionati già caricati
+Exec=convert-to-it %F
+Icon-Name=convert-to-it
+Selection=notnone
+Extensions=nodirs;

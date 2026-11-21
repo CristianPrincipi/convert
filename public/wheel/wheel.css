@@ -1,0 +1,203 @@
+/* linux-local: the right-click conversion wheel. The window is transparent and covers the monitor;
+   only the wheel is drawn, at the cursor. Same look as the approved demo. */
+:root {
+  --wheel: #141d26;
+  --wheel-2: #1f2b37;
+  --wheel-3: #2a3846;
+  --wheel-fg: #e7edf2;
+  --wheel-muted: #8fa0ae;
+  --wheel-ink: #0a1016;
+  --c-img: #ff8f5e;
+  --c-doc: #6ea8ff;
+  --c-data: #c9a0f5;
+  --c-arc: #e2bb6c;
+  --c-av: #3fd3a3;
+  --f-display: "Space Grotesk", "Inter", "Cantarell", "Noto Sans", system-ui, sans-serif;
+  --f-body: "Inter", "Cantarell", "Noto Sans", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", "Fira Code", "DejaVu Sans Mono", ui-monospace, monospace;
+  color-scheme: dark;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+  cursor: default;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.wheel {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(var(--s, 1));
+  outline: none;
+}
+.wheel.pop {
+  animation: pop 0.14s ease-out;
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(calc(var(--s, 1) * 0.86));
+  }
+}
+.wheel svg {
+  width: 420px;
+  height: 420px;
+  display: block;
+  overflow: visible;
+}
+
+.base {
+  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.45));
+}
+.cat path.body {
+  fill: var(--wheel);
+  stroke: var(--wheel-2);
+  stroke-width: 1;
+  cursor: pointer;
+  transition: fill 0.1s;
+}
+.cat path.edge {
+  fill: var(--cc);
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.1s;
+}
+.cat text {
+  fill: var(--wheel-fg);
+  font: 600 12.5px var(--f-body);
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+.cat.hover path.body {
+  fill: var(--wheel-2);
+}
+.cat.open path.body {
+  fill: var(--wheel-3);
+}
+.cat.open path.edge,
+.cat.hover path.edge {
+  opacity: 1;
+}
+.cat.open text {
+  fill: var(--cc);
+}
+.cat.off path.body {
+  cursor: not-allowed;
+}
+.cat.off text {
+  fill: var(--wheel-muted);
+  opacity: 0.45;
+}
+.cat.off path.edge {
+  opacity: 0.15;
+}
+
+.glow {
+  fill: var(--cc);
+  opacity: 0.3;
+  pointer-events: none;
+}
+.fmt path {
+  fill: var(--wheel);
+  stroke: var(--wheel-2);
+  stroke-width: 1;
+  cursor: pointer;
+  transition: fill 0.08s;
+}
+.fmt text {
+  fill: var(--wheel-fg);
+  font: 600 12.5px var(--f-display);
+  letter-spacing: 0.02em;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+.fmt.on path {
+  fill: var(--cc);
+}
+.fmt.on text {
+  fill: var(--wheel-ink);
+}
+.aura .fmt {
+  animation: fan 0.2s ease-out backwards;
+  transform-origin: 210px 210px;
+}
+.aura .glow {
+  animation: glow 0.3s ease-out backwards;
+}
+@keyframes fan {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+@keyframes glow {
+  from {
+    opacity: 0;
+  }
+}
+
+.hub {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 112px;
+  height: 112px;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--wheel-2);
+  color: var(--wheel-fg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  gap: 3px;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--wheel-3);
+}
+.hub:hover {
+  background: var(--wheel-3);
+}
+.hub .lvl {
+  font: 500 9.5px var(--f-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hc, var(--wheel-muted));
+}
+.hub .main {
+  font: 600 12px/1.25 var(--f-body);
+  max-height: 46px;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.hub .sub {
+  font: 400 9.5px/1.3 var(--f-mono);
+  color: var(--wheel-muted);
+  overflow-wrap: anywhere;
+  max-height: 26px;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wheel.pop,
+  .aura .fmt,
+  .aura .glow {
+    animation: none;
+  }
+}

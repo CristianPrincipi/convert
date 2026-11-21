@@ -18,6 +18,14 @@ const securityHeaders = require("./securityHeaders.cjs");
 const DIST_PATH = path.join(app.getAppPath(), "dist");
 const RELEASE_URL = "https://github.com/p2r3/convert/releases/tag/latest";
 
+// linux-local: never contact GitHub for updates unless explicitly asked to
+const OFFLINE = process.env.CONVERT_ONLINE !== "1";
+
+// linux-local: right-click integration (wheel, background mode, files on the command line)
+const linux = require("./electron-linux.cjs");
+const gotSingleInstanceLock = linux.init();
+if (!gotSingleInstanceLock) app.quit();
+
 protocol.registerSchemesAsPrivileged([
   {
     scheme: "app",
@@ -53,6 +61,8 @@ function createWindow() {
     }
     return { action: "deny" };
   });
+
+  return mainWindow;
 }
 
 const UPDATE_SETTINGS_PATH = path.join(app.getPath("userData"), "update-settings.json");
@@ -181,13 +191,14 @@ function setupUpdater() {
   });
 
   // False in dev builds and in Linux builds that aren't run as an AppImage
-  const supported = app.isPackaged && autoUpdater.isUpdaterActive();
+  const supported = !OFFLINE && app.isPackaged && autoUpdater.isUpdaterActive();
   const { autoUpdate } = readUpdateSettings();
   setUpdateState({ supported, autoUpdate });
   if (autoUpdate) checkForUpdates(false);
 }
 
 void app.whenReady().then(() => {
+  if (!gotSingleInstanceLock) return;
   // Handler: Map every app:// request to local file on disk
   protocol.handle("app", async (request) => {
     try {
@@ -239,7 +250,7 @@ void app.whenReady().then(() => {
     }
   });
 
-  createWindow();
+  linux.start(createWindow);
   setupUpdater();
 
   app.on("activate", () => {
@@ -261,5 +272,5 @@ app.on("web-contents-created", (event, contents) => {
 });
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+  if (process.platform !== "darwin" && !linux.isResident()) app.quit();
 });

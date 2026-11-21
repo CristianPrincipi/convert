@@ -8,6 +8,8 @@ import Popup from "./components/Popup";
 import FullPageDropOverlay from "./components/FullPageDropOverlay";
 import { CurrentPage, Pages } from "./AppState";
 import "./components/StyledButton/index.css";
+import "./DesktopLaunch";
+import "./DesktopEngine";
 export { CurrentPage, LoadingToolsText, Pages, PopupData } from "./AppState";
 
 console.log("Rendering UI");

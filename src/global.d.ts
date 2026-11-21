@@ -2,6 +2,8 @@ import type { FileData, ConvertPathNode, HandlerDefinition } from "./FormatHandl
 import type { TraversionGraph } from "./TraversionGraph.js";
 import type { Remote } from "comlink";
 import type { DesktopUpdater } from "./ui/UpdateStore.js";
+import type { DesktopLaunch } from "./ui/DesktopLaunch.js";
+import type { DesktopEngine } from "./ui/DesktopEngine.js";
 import type { ConvertOptions } from "./Settings.js";
 
 declare global {
@@ -30,6 +32,10 @@ declare global {
     } | null>;
     /** Only defined in the desktop app, exposed by src/electron-preload.cjs */
     desktopUpdater?: DesktopUpdater;
+    /** linux-local: files the desktop app was launched with */
+    desktopLaunch?: DesktopLaunch;
+    /** linux-local: only in the hidden window that converts for the wheel */
+    desktopEngine?: DesktopEngine;
   }
 
   var baseUrl: string | undefined;

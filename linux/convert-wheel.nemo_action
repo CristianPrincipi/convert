@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Converti…
+Comment=Apre la ruota di conversione e salva il risultato accanto all'originale
+Exec=convert-to-it --wheel %F
+Icon-Name=convert-to-it
+Selection=notnone
+Extensions=nodirs;
