@@ -5,7 +5,9 @@
 set -eu
 cd "$(dirname "$0")/.."
 
+built=0
 if [ "${1:-}" != "--no-build" ]; then
+  built=1
   bun install --frozen-lockfile
   bun run desktop:build
   bunx electron-builder --linux dir --publish never
@@ -25,6 +27,8 @@ rm -rf "$dest.new"
 cp -a "$src" "$dest.new"
 rm -rf "$dest"
 mv "$dest.new" "$dest"
+# which commit is installed: arch-setup's sync.sh rebuilds when the checkout moves past it
+[ "$built" = 1 ] && git rev-parse HEAD > "$dest/.installed-commit"
 
 install -Dm755 linux/convert-to-it.sh "$HOME/.local/bin/convert-to-it"
 install -Dm644 linux/convert-to-it.desktop "$HOME/.local/share/applications/convert-to-it.desktop"
